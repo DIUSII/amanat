@@ -1,4 +1,6 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
+
+const {width} = Dimensions.get('window');
 
 export default StyleSheet.create({
   container: {
@@ -24,8 +26,8 @@ export default StyleSheet.create({
     marginBottom: 20,
   },
   cellContainer: {
-    width: 80,
-    height: 80,
+    width: width * 0.2,
+    height: width * 0.2,
     backgroundColor: '#fff',
     borderRadius: 30,
     justifyContent: 'center',
@@ -39,8 +41,6 @@ export default StyleSheet.create({
   circleContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 80,
-    height: 80,
   },
   changeNumber: {
     fontWeight: '300',
