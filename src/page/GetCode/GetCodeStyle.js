@@ -7,7 +7,7 @@ export default StyleSheet.create({
     flex: 1,
     paddingTop: 64,
     paddingHorizontal: 30,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#fff',
   },
   subTitleContainer: {
     display: 'flex',

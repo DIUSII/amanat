@@ -3,9 +3,9 @@ import {View, Text} from 'react-native';
 
 import styles from './TitleStyle';
 
-const Title = ({children}) => {
+const Title = ({children, style}) => {
   return (
-    <View style={styles.titleContainer}>
+    <View style={[styles.titleContainer, style]}>
       <Text style={styles.titleText}>{children}</Text>
     </View>
   );

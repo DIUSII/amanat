@@ -45,6 +45,12 @@ const GetCode = ({route, navigation}) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (value.length === 4) {
+      navigation.navigate('Register');
+    }
+  }, [value]);
+
   return (
     <View style={styles.container}>
       <Title>Подтверждение номера</Title>

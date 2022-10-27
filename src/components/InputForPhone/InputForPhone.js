@@ -18,17 +18,13 @@ const InputForPhone = props => {
       <View style={styles.container}>
         <Text style={styles.seven}>+7</Text>
         <MaskInput
+          autoFocus
           placeholder={focus ? '(xxx) xxx xx xx' : 'Телефон'}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           keyboardType={'number-pad'}
           value={props.value}
-          style={{
-            paddingTop: 0,
-            paddingBottom: 0,
-            color: '#ABA9B9',
-            fontSize: 17,
-          }}
+          style={styles.maskInput}
           placeholderTextColor={'#ABA9B9'}
           onChangeText={(masked, unmasked) => {
             props.setValue(unmasked);

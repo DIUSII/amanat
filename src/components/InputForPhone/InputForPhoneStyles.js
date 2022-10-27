@@ -7,12 +7,18 @@ export default StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 30,
     paddingHorizontal: 24,
-    paddingVertical: 20,
   },
   seven: {
     fontSize: 17,
     LineHeight: 23,
     color: '#484653',
     marginRight: 19,
+  },
+  maskInput: {
+    width: '100%',
+    paddingTop: 20,
+    paddingBottom: 20,
+    color: '#ABA9B9',
+    fontSize: 17,
   },
 });
