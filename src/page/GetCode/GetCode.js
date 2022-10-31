@@ -77,7 +77,7 @@ const GetCode = ({route, navigation}) => {
               endColor={'#DFDFE650'}>
               <View style={styles.cellContainer}>
                 <Text style={styles.cell}>
-                  {symbol || (isFocused ? <Cursor /> : <Circle />)}
+                  {symbol || (isFocused ? <Cursor /> : <Circle fill={'red'} />)}
                 </Text>
               </View>
             </Shadow>

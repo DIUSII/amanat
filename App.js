@@ -1,16 +1,14 @@
 import React from 'react';
 import type {Node} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import YaMap from 'react-native-yamap';
-
-import AppNavigation from './navigation/AppNavigation';
-
-YaMap.init('02342126-49de-4caf-835a-708529d9f4f1');
+import 'react-native-gesture-handler';
+import {navigationRef} from './navigation/RootNavigation';
+import SideMenu from './navigation/SideMenu';
 
 const App: () => Node = () => {
   return (
-    <NavigationContainer>
-      <AppNavigation />
+    <NavigationContainer ref={navigationRef}>
+      <SideMenu />
     </NavigationContainer>
   );
 };
