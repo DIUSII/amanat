@@ -5,9 +5,6 @@ import {ScrollView, View} from 'react-native';
 
 import Button from '../../components/Button/Button';
 
-import Car from '../../images/svgChanges/Car';
-
-import styles from './CategoriesStyles';
 import HeavyCar from '../../images/svgChanges/HeavyCar';
 import Hands from '../../images/svgChanges/Hands';
 import Bomb from '../../images/svgChanges/Bomb';
@@ -15,8 +12,11 @@ import ManyBox from '../../images/svgChanges/ManyBox';
 import Flasks from '../../images/svgChanges/Flasks';
 import Loader from '../../images/svgChanges/Loader';
 import SmallBox from '../../images/svgChanges/SmallBox';
+import Car from '../../images/svgChanges/Car';
 
-const Categories = () => {
+import styles from './CategoriesStyles';
+
+const Categories = ({navigation}) => {
   const [categories, setCategories] = useState([
     {
       id: 0,
@@ -152,7 +152,11 @@ const Categories = () => {
             </View>
           ) : null,
         )}
-        <Button style={{marginTop: 23}}>Далее</Button>
+        <Button
+          onPress={() => navigation.navigate('CreateOrder')}
+          style={{marginTop: 23}}>
+          Далее
+        </Button>
       </View>
     </ScrollView>
   );

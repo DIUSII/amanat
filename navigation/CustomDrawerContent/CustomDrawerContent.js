@@ -20,7 +20,7 @@ const CustomDrawerContent = ({navigation}) => {
     {
       id: 2,
       title: 'Личный кабинет',
-      navigation: '',
+      navigation: 'Profile',
     },
     {
       id: 3,

@@ -7,8 +7,11 @@ import Register from '../src/page/Register/Register';
 import RegisterDriver from '../src/page/RegisterDriver/RegisterDriver';
 import Main from '../src/page/Main/Main';
 import HeaderLeft from '../src/components/HeaderLeft/HeaderLeft';
-import HeaderCenter from '../src/components/HeaderCenter/HeaderCenter';
 import Categories from '../src/page/Categories/Categories';
+import CreateOrder from '../src/page/CreateOrder/CreateOrder';
+import Profile from '../src/page/Profile/Profile';
+import ChangePhone from '../src/page/ChangePhone/ChangePhone';
+import TypeDriver from '../src/page/TypeDriver/TypeDriver';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,7 +32,7 @@ const headerOptions = (title, typeHeaderLeft) => {
 
 const AppNavigation = () => {
   return (
-    <Stack.Navigator initialRouteName={'Main'}>
+    <Stack.Navigator initialRouteName={'Login'}>
       <Stack.Screen
         name="Login"
         component={LoginScreen}
@@ -59,6 +62,26 @@ const AppNavigation = () => {
         name="Main"
         component={Main}
         options={headerOptions('Главная', 'menu')}
+      />
+      <Stack.Screen
+        name="CreateOrder"
+        component={CreateOrder}
+        options={headerOptions('Оформление заказа', 'arrow')}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={Profile}
+        options={headerOptions('Личный кабинет', 'arrow')}
+      />
+      <Stack.Screen
+        name="ChangePhone"
+        component={ChangePhone}
+        options={headerOptions('Изменить номер', 'arrow')}
+      />
+      <Stack.Screen
+        name="TypeDriver"
+        component={TypeDriver}
+        options={headerOptions('Изменить вид транспорта', 'arrow')}
       />
     </Stack.Navigator>
   );

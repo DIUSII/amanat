@@ -1,8 +1,8 @@
 import React from 'react';
 import {TextInput, View} from 'react-native';
+import {Shadow} from 'react-native-shadow-2';
 
 import styles from './InputStyles';
-import {Shadow} from 'react-native-shadow-2';
 
 const Input = ({value, setValue, placeholder, style}) => {
   return (

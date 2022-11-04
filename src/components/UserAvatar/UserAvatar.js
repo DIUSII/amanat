@@ -7,12 +7,12 @@ import Pencil from '../../images/svg/pencil.svg';
 
 import styles from './UserAvatarStyles';
 
-const UserAvatar = () => {
+const UserAvatar = ({style}) => {
   const [visible, setVisible] = useState(false);
   const [image, setImage] = useState('');
 
   return (
-    <TouchableOpacity onPress={() => setVisible(true)} style={styles.container}>
+    <TouchableOpacity onPress={() => setVisible(true)} style={[styles.container, style]}>
       {image && image.assets && image.assets[0].uri ? (
         <Image
           resizeMode="cover"
