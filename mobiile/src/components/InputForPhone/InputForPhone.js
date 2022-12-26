@@ -21,7 +21,10 @@ const InputForPhone = props => {
           autoFocus
           placeholder={focus ? '(xxx) xxx xx xx' : 'Телефон'}
           onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
+          onBlur={() => {
+            props.onBlur && props.onBlur();
+            setFocus(false);
+          }}
           keyboardType={'number-pad'}
           value={props.value}
           style={styles.maskInput}

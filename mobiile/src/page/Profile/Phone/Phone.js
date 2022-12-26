@@ -5,8 +5,11 @@ import {Shadow} from 'react-native-shadow-2';
 import * as RootNavigation from '../../../../navigation/RootNavigation';
 
 import styles from './PhoneStyles';
+import {useAppSelector} from '../../../utils/hooks';
 
 const Phone = () => {
+  const {properties} = useAppSelector(state => state.main.user);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -20,7 +23,10 @@ const Phone = () => {
         <View style={styles.content}>
           <Text style={styles.phoneLabel}>Номер телефона</Text>
           <View style={styles.row}>
-            <Text style={styles.phone}>+7 (727) 545 49 99</Text>
+            <Text style={styles.phone}>
+              ..... {properties.phone.slice(-4, -2)}-
+              {properties.phone.slice(-2)}
+            </Text>
           </View>
         </View>
       </Shadow>

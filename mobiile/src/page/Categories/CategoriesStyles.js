@@ -16,4 +16,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
+  loading: {
+    marginTop: 164,
+  }
 });

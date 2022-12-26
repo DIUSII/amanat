@@ -1,28 +1,68 @@
-import React, {useState} from 'react';
-import {ScrollView, Switch, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {BackHandler, ScrollView, View} from 'react-native';
+
+import {useAppDispatch} from '../../utils/hooks';
+import {registerUserOrDriver} from '../../store/slice/AuthSlice';
 
 import Title from '../../components/Title/Title';
 import Toggle from './components/Toggle/Toggle';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
+import Camera from '../../components/Camera/Camera';
+import DropDownPickerInput from '../../components/DropDownPickerInput/DropDownPickerInput';
 
 import styles from './RegisterStyle';
-import CameraModal from '../../components/Camera/Camera';
+import {getUser} from '../../store/slice/MainSlice';
 
-const RegisterStyle = ({navigation}) => {
+const RegisterStyle = ({route, navigation}) => {
+  const dispatch = useAppDispatch();
+  const {params} = route;
+
   const [surname, setSurname] = useState('');
   const [name, setName] = useState('');
   const [patronymic, setPatronymic] = useState('');
   const [city, setCity] = useState('');
   const [role, setRole] = useState('user');
+  const [image, setImage] = useState('');
+  const [cities, setCities] = useState([
+    {label: 'Москва', value: 'moscow'},
+    {label: 'Алмата', value: 'almaty'},
+  ]);
 
-  const onPress = () => {
-    if (role === 'user') {
-      navigation.navigate('Main');
-    } else if (role === 'driver') {
-      navigation.navigate('RegisterDriver');
+  const buttonDisabled = !name || !surname || !city || !patronymic;
+
+  const onPress = async () => {
+    const payload = {
+      first_name: name,
+      last_name: surname,
+      patronymic,
+      is_driver: false,
+      place_of_residence: city,
+      phone: params && params.phone,
+    };
+    if (image) {
+      payload.photo = `data:${image.type};base64,${image.base64}`;
+    }
+
+    const data = await dispatch(registerUserOrDriver(payload));
+
+    if (data.payload) {
+      if (role === 'driver') {
+        navigation.navigate('RegisterDriver');
+      }
+      if (role === 'user') {
+        await dispatch(getUser());
+        navigation.navigate('Main');
+      }
     }
   };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => true);
+
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', () => false);
+  }, []);
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -38,11 +78,24 @@ const RegisterStyle = ({navigation}) => {
         <Input
           value={patronymic}
           setValue={setPatronymic}
-          placeholder={'Отчество'}
+          placeholder={'Отчество *'}
         />
-        <Input value={city} setValue={setCity} placeholder={'Город *'} />
-        <CameraModal text={'Загрузите ваше фото'} />
-        <Button onPress={onPress}>Подтвердить</Button>
+        <DropDownPickerInput
+          items={cities}
+          setItems={setCities}
+          value={city}
+          setValue={setCity}
+          placeholder={'Выберете город'}
+          searchable={true}
+        />
+        <Camera
+          text={'Загрузите ваше фото'}
+          setImage={setImage}
+          image={image}
+        />
+        <Button disabled={buttonDisabled} onPress={onPress}>
+          Подтвердить
+        </Button>
       </View>
     </ScrollView>
   );

@@ -9,6 +9,7 @@ export default StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: '#fff',
     minHeight: height - 86,
     paddingHorizontal: 30,
     paddingTop: 32,

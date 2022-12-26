@@ -3,7 +3,10 @@ import {StyleSheet} from 'react-native';
 export default StyleSheet.create({
   container: {
     flexDirection: 'row',
+    width: '100%',
     alignItems: 'center',
+    marginTop: 30,
+    marginBottom: 10,
   },
   tags: {
     backgroundColor: '#DFDEE7',
@@ -19,7 +22,8 @@ export default StyleSheet.create({
   },
   clear: {
     position: 'absolute',
-    top: -5,
-    right: -5,
+    top: -15,
+    right: -15,
+    zIndex: 10,
   },
 });

@@ -17,7 +17,7 @@ export const getDadata = async query => {
       {query},
       config,
     );
-    console.log(data.suggestions);
+
     return data.suggestions;
   } catch (e) {
     console.error(e);

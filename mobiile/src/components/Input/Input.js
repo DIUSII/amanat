@@ -10,6 +10,7 @@ const Input = ({
   placeholder,
   style,
   keyboardType = 'default',
+  enable = true,
 }) => {
   return (
     <View style={[styles.container, style]}>
@@ -21,6 +22,8 @@ const Input = ({
         offset={[0, 3]}>
         <View style={styles.containerInput}>
           <TextInput
+            editable={enable}
+            selectTextOnFocus={enable}
             value={value}
             keyboardType={keyboardType}
             onChangeText={setValue}

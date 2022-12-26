@@ -22,3 +22,9 @@ export function openDrawer() {
     navigationRef.dispatch(DrawerActions.openDrawer());
   }
 }
+
+export function closeDrawer() {
+  if (navigationRef.isReady()) {
+    navigationRef.dispatch(DrawerActions.closeDrawer());
+  }
+}

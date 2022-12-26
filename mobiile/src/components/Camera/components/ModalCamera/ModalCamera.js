@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, TouchableOpacity, View} from 'react-native';
+import {Modal, PermissionsAndroid, TouchableOpacity, View} from 'react-native';
 
 import styles from './ModalCameraStyles';
 import Button from '../../../Button/Button';
@@ -11,7 +11,7 @@ const ModalCamera = ({visible, setVisible, handleImage}) => {
     options: {
       saveToPhotos: true,
       mediaType: 'photo',
-      includeBase64: false,
+      includeBase64: true,
       includeExtra: true,
     },
   };
@@ -21,12 +21,17 @@ const ModalCamera = ({visible, setVisible, handleImage}) => {
     options: {
       selectionLimit: 0,
       mediaType: 'photo',
-      includeBase64: false,
+      includeBase64: true,
       includeExtra: true,
     },
   };
 
   const onButtonPress = React.useCallback(async (type, options) => {
+    await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+    ]);
+
     if (type === 'capture') {
       await launchCamera(options, handleImage);
     } else {

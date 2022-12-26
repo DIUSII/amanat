@@ -14,11 +14,14 @@ import Timer from '../../components/InputForPhone/components/Timer/Timer';
 import Circle from '../../images/svg/circle.svg';
 
 import styles from './GetCodeStyle';
+import {useAppDispatch} from '../../utils/hooks';
+import {setCode} from '../../store/slice/AuthSlice';
 
 const CELL_COUNT = 4;
 
 const GetCode = ({route, navigation}) => {
-  const {phone} = route.params;
+  const {params} = route;
+  const dispatch = useAppDispatch();
 
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -47,7 +50,19 @@ const GetCode = ({route, navigation}) => {
 
   useEffect(() => {
     if (value.length === 4) {
-      navigation.navigate('Register');
+      dispatch(setCode({phone: params && params.phone, code: value}))
+        .then(({payload}) => {
+          if (payload.is_exists) {
+            navigation.navigate('Main');
+
+          } else {
+            navigation.navigate('Register', {phone: params && params.phone});
+          }
+          setValue('');
+        })
+        .catch(e => {
+          setValue('');
+        });
     }
   }, [value]);
 
@@ -56,7 +71,7 @@ const GetCode = ({route, navigation}) => {
       <Title>Подтверждение номера</Title>
       <View style={styles.subTitleContainer}>
         <Text style={styles.subTitle}>
-          Введите код, отправленный на +7{phone}
+          Введите код, отправленный на +{params && params.phone}
         </Text>
       </View>
       <CodeField

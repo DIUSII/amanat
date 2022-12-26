@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Category from './Category/Category';
 import Title from '../../components/Title/Title';
-import {ScrollView, View} from 'react-native';
+import {ActivityIndicator, ScrollView, View} from 'react-native';
+
+import {useAppDispatch, useAppSelector} from '../../utils/hooks';
 
 import Button from '../../components/Button/Button';
 
@@ -15,9 +17,13 @@ import SmallBox from '../../images/svgChanges/SmallBox';
 import Car from '../../images/svgChanges/Car';
 
 import styles from './CategoriesStyles';
+import {getCargoCategories} from '../../store/slice/MainSlice';
 
 const Categories = ({navigation}) => {
-  const [categories, setCategories] = useState([
+  const dispatch = useAppDispatch();
+
+  const cargoCategories = useAppSelector(state => state.main.cargoCategories);
+  const testDataCargoCategories = [
     {
       id: 0,
       icon: <Car />,
@@ -109,55 +115,77 @@ const Categories = ({navigation}) => {
     {
       id: 7,
       icon: <SmallBox />,
-      iconActive: (
-        <SmallBox
-          stopColorFirstGradient={'#fff'}
-          stopColorSecondGradient={'#fff'}
-        />
-      ),
+      iconActive: <SmallBox fill={'#fff'} />,
       title: 'Произвольная доставка',
       active: false,
       navigation: '',
     },
-  ]);
+  ];
 
-  const changeActive = index => {
-    const category = categories.find(item => item.id === index);
-    const falseActiveInCategories = categories.map(item => {
-      return {...item, active: false};
-    });
-    category.active = !category.active;
-    setCategories([
-      ...falseActiveInCategories.slice(0, index),
-      category,
-      ...falseActiveInCategories.slice(index + 1),
-    ]);
+  const compareTwoArray = () =>
+    (cargoCategories &&
+      cargoCategories.map(cargoCategory => {
+        return {
+          ...testDataCargoCategories.find(
+            ({title}) => title === cargoCategory.title,
+          ),
+          id: cargoCategory.id,
+        };
+      })) ||
+    [];
+
+  const [categories, setCategories] = useState([]);
+
+  const disabledButton = !categories.find(category => category.active);
+
+  const changeActive = id => {
+    const mapArray = categories.map(category =>
+      category.id === id
+        ? {...category, active: !category.active}
+        : {...category, active: false},
+    );
+    setCategories(mapArray);
   };
+
+  useEffect(() => {
+    dispatch(getCargoCategories());
+  }, []);
+
+  useEffect(() => {
+    setCategories(compareTwoArray());
+  }, [cargoCategories]);
 
   return (
     <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
-        {categories.map((category, index, arr) =>
-          category.id % 2 === 0 ? (
-            <View style={styles.content} key={category.id}>
-              <Category
-                category={category}
-                onPress={() => changeActive(index)}
-                style={{marginRight: 20}}
-              />
-              <Category
-                category={arr[index + 1]}
-                onPress={() => changeActive(index + 1)}
-              />
-            </View>
-          ) : null,
-        )}
-        <Button
-          onPress={() => navigation.navigate('CreateOrder')}
-          style={{marginTop: 23}}>
-          Далее
-        </Button>
-      </View>
+      {categories && categories.length ? (
+        <View style={styles.container}>
+          {categories.map((category, index, arr) =>
+            category.id % 2 !== 0 ? (
+              <View style={styles.content} key={category.id}>
+                <Category
+                  category={category}
+                  onPress={() => changeActive(category.id)}
+                  style={{marginRight: 20}}
+                />
+                <Category
+                  category={arr[index + 1]}
+                  onPress={() => changeActive(arr[index + 1].id)}
+                />
+              </View>
+            ) : null,
+          )}
+          <Button
+            disabled={disabledButton}
+            onPress={() => navigation.navigate('CreateOrder')}
+            style={{marginTop: 23}}>
+            Далее
+          </Button>
+        </View>
+      ) : (
+        <View style={styles.loading}>
+          <ActivityIndicator size={'large'} color={'#392D92'} />
+        </View>
+      )}
     </ScrollView>
   );
 };

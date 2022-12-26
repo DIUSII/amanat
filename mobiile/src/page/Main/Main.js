@@ -1,12 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {Alert, Text, View} from 'react-native';
-import MapboxGL, {Logger, CircleLayer} from '@rnmapbox/maps';
+import React, {useEffect, useRef, useState} from 'react';
+import {AppState, Text, View} from 'react-native';
+import MapboxGL, {Logger} from '@rnmapbox/maps';
+import DeviceInfo from 'react-native-device-info';
 
 import BottomSheet from './components/BottomSheet/BottomSheet';
 
 import Icon from '../../images/png/icon.png';
 import Box from '../../images/png/box.png';
 import axios from 'axios';
+import {useAppDispatch} from '../../utils/hooks';
+import {getUser, updateUser} from '../../store/slice/MainSlice';
+import {getOrder} from '../../store/slice/OrdersSlice';
 
 MapboxGL.setAccessToken(
   'pk.eyJ1IjoicHJvZGl1cyIsImEiOiJjbDlyOWIyNzkwMDIyM29waW5iN2g2bDVuIn0.TbhpPoFoUJM6CME8fcfNdQ',
@@ -44,10 +48,14 @@ const defaultStyle = {
 };
 
 const Main = () => {
-  const isGranted = MapboxGL.requestAndroidLocationPermissions();
-  const [coordinates, setCoordinates] = useState([]);
+  const dispatch = useAppDispatch();
+  const camera = useRef(null);
+
+  MapboxGL.requestAndroidLocationPermissions();
+  const [coordinates, setCoordinates] = useState([92.8798352, 56.0370466]);
+  const [coordinatesCamera, setCoordinatesCamera] = useState([92.8798352, 56.0370466]);
   const [radius, setRadius] = useState(60);
-  const [zoom, setZoom] = useState(6);
+  const [zoom, setZoom] = useState(16);
   const [icon, setIcon] = useState(Icon);
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
@@ -67,13 +75,19 @@ const Main = () => {
   const createOrder = () => {
     setRadius(120);
     setIcon(Box);
-    setZoom(10);
   };
 
   const rejectOrder = () => {
     setRadius(60);
     setIcon(Icon);
   };
+
+  const focusForPin = () => {
+    camera.current?.setCamera({
+      centerCoordinate: coordinates,
+    });
+  };
+
   // '92.8798352 56.0370466'
   useEffect(() => {
     setLoading(true);
@@ -83,7 +97,9 @@ const Main = () => {
         url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${coordinates[0]},${coordinates[1]}.json?access_token=pk.eyJ1IjoicHJvZGl1cyIsImEiOiJjbDlyOWIyNzkwMDIyM29waW5iN2g2bDVuIn0.TbhpPoFoUJM6CME8fcfNdQ`,
       }).then(response => {
         setLoading(false);
+
         const data = response.data;
+
         if (data.features[0] && data.features[0].properties.address) {
           setAddress(data.features[0].properties.address);
         } else {
@@ -93,15 +109,34 @@ const Main = () => {
     }
   }, [coordinates]);
 
+  useEffect(() => {
+    DeviceInfo.isLocationEnabled().then(enabled => {
+      console.log(enabled);
+    });
+  }, []);
+
+  useEffect(() => {
+    dispatch(getUser());
+    dispatch(getOrder());
+    dispatch(
+      updateUser({
+        location: {
+          type: 'Point',
+          coordinates: [coordinates[0], coordinates[1]],
+        },
+      }),
+    );
+  }, []);
+
   return (
     <View style={{flex: 1}}>
       <MapboxGL.MapView
         style={{flex: 1}}
         styleJSON={JSON.stringify(defaultStyle)}>
         <MapboxGL.Camera
-          zoomLevel={zoom}
-          followUserLocation={true}
-          followUserMode="course"
+          ref={camera}
+          zoomLevel={16}
+          centerCoordinate={coordinates}
           animationDuration={300}
         />
         <MapboxGL.UserLocation
@@ -146,9 +181,10 @@ const Main = () => {
         </MapboxGL.UserLocation>
       </MapboxGL.MapView>
       <View style={{position: 'absolute', top: 0}}>
-        <Text> {coordinates}</Text>
+        <Text>{coordinates}</Text>
       </View>
       <BottomSheet
+        focusForPin={focusForPin}
         createOrder={createOrder}
         rejectOrder={rejectOrder}
         loading={loading}

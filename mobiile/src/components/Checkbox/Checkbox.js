@@ -4,9 +4,7 @@ import CheckBox from '@react-native-community/checkbox';
 
 import styles from './CheckboxStyles';
 
-const Checkbox = ({title}) => {
-  const [isSelected, setSelection] = useState(false);
-
+const Checkbox = ({title, isSelected, setSelection}) => {
   return (
     <TouchableOpacity
       onPress={() => setSelection(!isSelected)}

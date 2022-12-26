@@ -5,9 +5,9 @@ import styles from './СalculatorBoxStyles';
 import Button from '../Button/Button';
 import CalculatorModal from './СalculatorModal/СalculatorModal';
 
-const CalculatorBox = () => {
-  const [volume, setVolume] = useState(0);
+const CalculatorBox = ({volume, setVolume}) => {
   const [visibleModal, setVisibleModal] = useState(0);
+
   return (
     <View style={styles.container}>
       {volume ? (

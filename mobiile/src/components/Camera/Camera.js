@@ -8,9 +8,8 @@ import AddCircle from '../../images/svg/addCircle.svg';
 
 import styles from './CameraStyles';
 
-const Camera = ({text, style, mode = 'inner', setImages}) => {
+const Camera = ({text, style, mode = 'inner', image, setImage, setImages}) => {
   const [visible, setVisible] = useState(false);
-  const [image, setImage] = useState('');
 
   const handleImage = images => {
     if (images.assets) {
@@ -31,12 +30,12 @@ const Camera = ({text, style, mode = 'inner', setImages}) => {
           style={{width: '100%', borderRadius: 30}}
           offset={[0, 3]}>
           <View style={[styles.innerContainer, style]}>
-            {mode === 'inner' && image.uri ? (
+            {mode === 'inner' && image && image.uri ? (
               <Image
                 resizeMode="cover"
                 resizeMethod="scale"
                 source={{
-                  uri: image && image.uri,
+                  uri: image.uri && image.uri,
                 }}
                 style={{width: '100%', height: '100%', borderRadius: 30}}
               />

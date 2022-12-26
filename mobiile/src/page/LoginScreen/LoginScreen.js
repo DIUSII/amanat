@@ -1,13 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Keyboard} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+
+import {sendSms} from '../../store/slice/AuthSlice';
+import {useAppDispatch} from '../../utils/hooks';
 
 import Title from '../../components/Title/Title';
 import InputForPhone from '../../components/InputForPhone/InputForPhone';
 
 import styles from './LoginScreenStyles';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const LoginScreen = ({navigation}) => {
+  const dispatch = useAppDispatch();
+
   const [phone, setPhone] = React.useState('');
   const [inlineStyleRules, setInlineStylesRules] = useState({
     bottom: 46,
@@ -27,11 +32,16 @@ const LoginScreen = ({navigation}) => {
     };
   }, []);
 
-  useEffect(() => {
+  const sendSmsHandle = () => {
     if (phone.length === 10) {
-      navigation.navigate('GetCode', {phone});
-      setPhone('');
+      dispatch(sendSms({phone: `7${phone}`})).then(() => {
+        navigation.navigate('GetCode', {phone: `7${phone}`});
+      });
     }
+  };
+
+  useEffect(() => {
+    sendSmsHandle();
   }, [phone]);
 
   return (
@@ -42,11 +52,20 @@ const LoginScreen = ({navigation}) => {
           Введите ваш номер телефона, чтобы&nbsp;войти или зарегистрироваться
         </Text>
       </View>
-      <InputForPhone value={phone} setValue={setPhone} />
+      <InputForPhone value={phone} setValue={setPhone} onBlur={sendSmsHandle} />
       <Text style={[styles.rules, inlineStyleRules]}>
         Регистрируясь, вы принимаете{' '}
-        <Text style={styles.underline}>условия использования</Text> и{' '}
-        <Text style={styles.underline}>политику конфиденциальности.</Text>
+        <Text
+          onPress={() => navigation.navigate('Rules')}
+          style={styles.underline}>
+          условия использования
+        </Text>{' '}
+        и{' '}
+        <Text
+          onPress={() => navigation.navigate('Pers')}
+          style={styles.underline}>
+          политику конфиденциальности.
+        </Text>
       </Text>
     </View>
   );

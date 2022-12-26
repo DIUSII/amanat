@@ -8,22 +8,26 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  clear: {
+    marginTop: 10,
+    marginRight: -10,
+  },
   modalContainer: {
     position: 'absolute',
-    top: 0,
+    top: '10%',
     left: 0,
     right: 0,
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 14,
+    borderRadius: 30,
   },
   container: {
     padding: 24,
-    borderRadius: 14,
+    paddingTop: 0,
+    borderRadius: 30,
     backgroundColor: '#fff',
     width: width - 60,
-    height: height * 0.9,
   },
   scrollView: {
     marginTop: height * 0.03,
@@ -59,5 +63,8 @@ export default StyleSheet.create({
     textAlign: 'center',
     color: '#484653',
     marginBottom: 24,
+  },
+  plus: {
+    opacity: 0.6,
   },
 });

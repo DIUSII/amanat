@@ -2,11 +2,16 @@ import React from 'react';
 import {Shadow} from 'react-native-shadow-2';
 import {Text, TextInput, TouchableOpacity, View} from 'react-native';
 
+import * as RootNavigation from '../../../../../../navigation/RootNavigation';
+
 import WhiteBox from '../../../../../images/svg/whiteBox.svg';
 import Arrow from '../../../../../images/svg/arrowInWay.svg';
 import Point from '../../../../../images/svg/pointInWay.svg';
 
 import styles from './WayInnerStyles';
+import axios from 'axios';
+import {useAppDispatch, useAppSelector} from '../../../../../utils/hooks';
+import {setMapOrderAddress} from '../../../../../store/slice/MainSlice';
 
 const WayInner = ({
   fromWhere,
@@ -16,7 +21,35 @@ const WayInner = ({
   setToWhere,
   focusToWhere,
   handleFocus,
+  visible,
 }) => {
+  const dispatch = useAppDispatch();
+
+  const changeText = (text, mode) => {
+    if (mode === 'from') {
+      setFromWhere({...fromWhere, text});
+    }
+    if (mode === 'to') {
+      setToWhere({...toWhere, text});
+    }
+
+    axios({
+      method: 'get',
+      url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${text}.json?access_token=pk.eyJ1IjoicHJvZGl1cyIsImEiOiJjbDlyOWIyNzkwMDIyM29waW5iN2g2bDVuIn0.TbhpPoFoUJM6CME8fcfNdQ`,
+    })
+      .then(({data}) => {
+        dispatch(
+          setMapOrderAddress({text, coordinates: data.features[0].center}),
+        );
+      })
+      .catch(e => console.log(e));
+  };
+
+  const openCart = mode => {
+    RootNavigation.navigate('MapOrder', {goBack: 'CreateOrder'});
+    handleFocus(mode);
+  };
+
   return (
     <View style={styles.container}>
       <Shadow
@@ -34,14 +67,12 @@ const WayInner = ({
               style={styles.input}
               placeholder={'Откуда *'}
               placeholderTextColor={'#ABA9B9'}
-              value={fromWhere}
-              onChange={({nativeEvent: {text}}) => setFromWhere(text)}
+              value={fromWhere.text}
+              onChange={({nativeEvent: {text}}) => changeText(text, 'from')}
             />
             <TouchableOpacity
-              style={[
-                styles.map,
-                focusFromWhere || focusToWhere ? styles.mapActive : null,
-              ]}>
+              onPress={() => openCart('focusFromWhere')}
+              style={[styles.map, visible ? styles.mapActive : null]}>
               <Text style={styles.textMap}>Карта</Text>
             </TouchableOpacity>
           </View>
@@ -57,9 +88,14 @@ const WayInner = ({
               style={styles.input}
               placeholder={'Куда *'}
               placeholderTextColor={'#ABA9B9'}
-              value={toWhere}
-              onChange={({nativeEvent: {text}}) => setToWhere(text)}
+              value={toWhere.text}
+              onChange={({nativeEvent: {text}}) => changeText(text, 'to')}
             />
+            <TouchableOpacity
+              onPress={() => openCart('focusToWhere')}
+              style={[styles.map, visible ? styles.mapActive : null]}>
+              <Text style={styles.textMap}>Карта</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Shadow>

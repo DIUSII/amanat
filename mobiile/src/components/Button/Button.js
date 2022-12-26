@@ -1,18 +1,25 @@
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {Text, TouchableOpacity} from 'react-native';
+import {Text, TouchableOpacity, ActivityIndicator} from 'react-native';
 
 import styles from './ButtonStyles';
 
-const Button = ({children, style, styleInner, onPress}) => {
+const Button = ({disabled, children, style, styleInner, onPress, loading}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.container, style]}>
+    <TouchableOpacity
+      disabled={disabled || loading}
+      onPress={onPress}
+      style={[styles.container, style, {opacity: disabled ? 0.5 : 1}]}>
       <LinearGradient
         style={[styles.linearGradient, styleInner]}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         colors={['#392D92', '#2A2263']}>
-        <Text style={styles.text}>{children}</Text>
+        {loading ? (
+          <ActivityIndicator color={'#fff'} />
+        ) : (
+          <Text style={styles.text}>{children}</Text>
+        )}
       </LinearGradient>
     </TouchableOpacity>
   );

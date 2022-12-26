@@ -24,34 +24,53 @@ const CalculatorModal = ({visible, setVisible, setVolume}) => {
   const [length, setLength] = useState('');
   const [width, setWidth] = useState('');
   const [height, setHeight] = useState('');
-  const [qty, setQty] = useState();
+  const [qty, setQty] = useState('');
   const [tags, setTags] = useState([]);
+
+  const buttonDisabled = !length || !width || !height || !qty;
 
   const addTag = () => {
     const lastId = (tags.slice(-1)[0] && tags.slice(-1)[0].id + 1) || 0;
-    const formulaVolume = +width * +length * +height * +qty;
-    console.log(+width);
-    console.log(formulaVolume);
-    setVolumeModal(formulaVolume);
-    setTags(innerTags => [...innerTags, {id: lastId, name: formulaVolume}]);
-    console.log(tags);
+    const formulaVolume = (+width * +length * +height * +qty) / 1000000;
+    const tag = {id: lastId, name: formulaVolume};
+
+    setTags(innerTags => [...innerTags, tag]);
+    setLength('');
+    setWidth('');
+    setHeight('');
+    setQty('');
   };
 
-  Keyboard.dismiss();
+  const onAccept = () => {
+    const formulaVolume = (+width * +length * +height * +qty) / 1000000;
+    const tagsSumVolume = tags.reduce((acc, cur) => acc + +cur.name, 0);
+
+    if (!buttonDisabled) {
+      const lastId = (tags.slice(-1)[0] && tags.slice(-1)[0].id + 1) || 0;
+      const tag = {id: lastId, name: formulaVolume};
+
+      setTags(innerTags => [...innerTags, tag]);
+      setLength('');
+      setWidth('');
+      setHeight('');
+      setQty('');
+    }
+
+    setVolumeModal(formulaVolume + tagsSumVolume);
+    setVolume(formulaVolume + tagsSumVolume);
+    setVisible(false);
+  };
+
+  useEffect(() => {
+    setVolumeModal(tags.reduce((acc, cur) => acc + +cur.name, 0));
+  }, [tags]);
 
   return (
     <Modal
       transparent={true}
-      visible={true}
-      onRequestClose={() => {
-        setVisible(false);
-      }}>
-      <TouchableOpacity
-        onPress={() => {
-          setVisible(false);
-        }}
-        accessible={false}
-        style={{flex: 1}}>
+      visible={visible}
+      onRequestClose={onAccept}>
+      <TouchableOpacity onPress={onAccept} accessible={false} style={{flex: 1}}>
         <BlurView blurType="dark" blurAmount={1} style={{flex: 1}} />
         <TouchableOpacity activeOpacity={1} style={styles.modalContainer}>
           <ScrollView
@@ -59,8 +78,8 @@ const CalculatorModal = ({visible, setVisible, setVolume}) => {
             style={styles.scrollView}>
             <View style={styles.container}>
               <View style={styles.row}>
-                <Tag />
-                <TouchableOpacity onPress={() => setVisible(false)}>
+                <Tag tags={tags} setTags={setTags} />
+                <TouchableOpacity style={styles.clear} onPress={onAccept}>
                   <Clear />
                 </TouchableOpacity>
               </View>
@@ -105,10 +124,14 @@ const CalculatorModal = ({visible, setVisible, setVolume}) => {
               </View>
               <View style={styles.row}>
                 <Button
+                  onPress={onAccept}
                   style={{marginRight: 15, marginBottom: 0, width: '70%'}}>
                   Принять
                 </Button>
-                <TouchableOpacity onPress={addTag}>
+                <TouchableOpacity
+                  style={buttonDisabled ? styles.plus : null}
+                  disabled={buttonDisabled}
+                  onPress={addTag}>
                   <Plus />
                 </TouchableOpacity>
               </View>

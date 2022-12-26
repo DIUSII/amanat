@@ -10,18 +10,13 @@ import Button from '../../components/Button/Button';
 const TypeDriver = () => {
   const [typeDriver, setTypeDriver] = useState([
     {
-      id: 0,
-      label: 'Газель крытая',
+      id: 1,
+      label: 'грузовик',
       selected: true,
     },
     {
-      id: 1,
-      label: 'Газель',
-      selected: false,
-    },
-    {
       id: 2,
-      label: 'Газель',
+      label: 'легковая',
       selected: false,
     },
   ]);
