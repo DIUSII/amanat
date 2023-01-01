@@ -20,6 +20,7 @@ import PhotoReport from '../src/page/PhotoReport/PhotoReport';
 import MapOrder from '../src/page/CreateOrder/components/MapOrder/MapOrder';
 import Rules from '../src/page/Rules/Rules';
 import Pers from '../src/page/Pers/Pers';
+import AddCard from '../src/page/AddCard/AddCard';
 
 const Stack = createNativeStackNavigator();
 
@@ -89,6 +90,11 @@ const AppNavigation = () => {
             name="MapOrder"
             component={MapOrder}
             options={headerOptions('', 'arrow')}
+          />
+          <Stack.Screen
+            name="AddCard"
+            component={AddCard}
+            options={headerOptions('Добавить карту', 'arrow')}
           />
         </>
       ) : (

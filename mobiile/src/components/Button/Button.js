@@ -9,14 +9,18 @@ const Button = ({disabled, children, style, styleInner, onPress, loading}) => {
     <TouchableOpacity
       disabled={disabled || loading}
       onPress={onPress}
-      style={[styles.container, style, {opacity: disabled ? 0.5 : 1}]}>
+      style={[
+        styles.container,
+        style,
+        {opacity: disabled || loading ? 0.5 : 1},
+      ]}>
       <LinearGradient
         style={[styles.linearGradient, styleInner]}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         colors={['#392D92', '#2A2263']}>
         {loading ? (
-          <ActivityIndicator color={'#fff'} />
+          <ActivityIndicator size={28} color={'#fff'} />
         ) : (
           <Text style={styles.text}>{children}</Text>
         )}

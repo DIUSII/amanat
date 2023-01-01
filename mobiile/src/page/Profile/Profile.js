@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {ScrollView, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
@@ -11,12 +11,16 @@ import Button from '../../components/Button/Button';
 import TypeDriver from './TypeDriver/TypeDriver';
 
 import styles from './ProfileStyles';
-import {logOut} from '../../store/slice/MainSlice';
+import {getCard, logOut} from '../../store/slice/MainSlice';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
   const dispatch = useAppDispatch();
 
   const {properties} = useAppSelector(state => state.main.user);
+
+  useEffect(() => {
+    dispatch(getCard());
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollView}>
@@ -33,7 +37,9 @@ const Profile = () => {
           {properties.bank_cards ? <Cards /> : null}
         </View>
         <View>
-          <Button>Добавить карту</Button>
+          <Button onPress={() => navigation.navigate('AddCard')}>
+            Добавить карту
+          </Button>
           <TouchableOpacity onPress={() => dispatch(logOut())}>
             <Text style={styles.logOut}>Выйти</Text>
           </TouchableOpacity>

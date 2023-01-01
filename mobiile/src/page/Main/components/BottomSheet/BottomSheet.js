@@ -20,6 +20,11 @@ const BottomSheet = ({focusForPin, loading, address}) => {
   const [startSearch, setStartSearch] = useState(false);
   const [timeSearch, setTimeSearch] = useState(1);
 
+  const loadPayments =
+    order &&
+    order.properties.status === 'created' &&
+    !order.properties.is_payed;
+
   const onPressUser = () => {
     RootNavigation.navigate('Categories', {goBack: 'Categories'});
   };
@@ -44,22 +49,35 @@ const BottomSheet = ({focusForPin, loading, address}) => {
       if (timeSearch.toString().includes('59')) {
         setTimeSearch(timeInner => timeInner + 41);
       }
+
       return () => clearInterval(timer);
     }
   }, [timeSearch, startSearch]);
 
   useEffect(() => {
+    setTimeSearch(1);
+  }, [order && order.properties.status]);
+
+  useEffect(() => {
     dispatch(getOrder()).then(({payload}) => {
-      if (
-        payload &&
-        payload.properties &&
-        payload.properties.status === 'created'
-      ) {
+      const {status, is_payed} = payload.properties;
+
+      if (status === 'created' && !is_payed) {
         setStartSearch(true);
       }
     });
 
-    const checkDriverFind = setInterval(() => dispatch(getOrder()), 10 * 1000);
+    const checkDriverFind = setInterval(
+      () =>
+        dispatch(getOrder()).then(({payload}) => {
+          const {status, is_payed} = payload.properties;
+
+          if (status === 'created' && !is_payed) {
+            setStartSearch(true);
+          }
+        }),
+      10 * 1000,
+    );
 
     if (order && order.properties && order.properties.status === 'created') {
       setStartSearch(true);
@@ -67,8 +85,6 @@ const BottomSheet = ({focusForPin, loading, address}) => {
       clearInterval(checkDriverFind);
       setStartSearch(false);
     }
-
-    return () => clearInterval(checkDriverFind);
   }, []);
 
   if (!user) {
@@ -79,7 +95,9 @@ const BottomSheet = ({focusForPin, loading, address}) => {
     <View style={styles.container}>
       {startSearch ? (
         <View>
-          <Text style={styles.textSearchDriver}>Поиск водителя</Text>
+          <Text style={styles.textSearchDriver}>
+            {loadPayments ? 'Ожидаем оплаты' : 'Поиск водителя'}
+          </Text>
           <Text style={styles.timer}>{(timeSearch / 100).toFixed(2)}</Text>
         </View>
       ) : (

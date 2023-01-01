@@ -11,6 +11,7 @@ import axios from 'axios';
 import {useAppDispatch} from '../../utils/hooks';
 import {getUser, updateUser} from '../../store/slice/MainSlice';
 import {getOrder} from '../../store/slice/OrdersSlice';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 MapboxGL.setAccessToken(
   'pk.eyJ1IjoicHJvZGl1cyIsImEiOiJjbDlyOWIyNzkwMDIyM29waW5iN2g2bDVuIn0.TbhpPoFoUJM6CME8fcfNdQ',
@@ -52,10 +53,8 @@ const Main = () => {
   const camera = useRef(null);
 
   MapboxGL.requestAndroidLocationPermissions();
-  const [coordinates, setCoordinates] = useState([92.8798352, 56.0370466]);
-  const [coordinatesCamera, setCoordinatesCamera] = useState([92.8798352, 56.0370466]);
+  const [coordinates, setCoordinates] = useState([92.1, 56.1]);
   const [radius, setRadius] = useState(60);
-  const [zoom, setZoom] = useState(16);
   const [icon, setIcon] = useState(Icon);
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
@@ -142,10 +141,7 @@ const Main = () => {
         <MapboxGL.UserLocation
           id={'user'}
           onUpdate={location => {
-            if (
-              coordinates[1] !== location.coords.latitude ||
-              coordinates[0] !== location.coords.longitude
-            ) {
+            if (coordinates[1] === 56.1 || coordinates[0] === 92.1) {
               setCoordinates([
                 location.coords.longitude,
                 location.coords.latitude,
@@ -180,9 +176,11 @@ const Main = () => {
           />
         </MapboxGL.UserLocation>
       </MapboxGL.MapView>
-      <View style={{position: 'absolute', top: 0}}>
-        <Text>{coordinates}</Text>
-      </View>
+      <TouchableOpacity
+        onPress={() => dispatch(getOrder())}
+        style={{position: 'absolute', top: 0, width: '100%', backgroundColor: 'red'}}>
+        <Text>asdfasdf</Text>
+      </TouchableOpacity>
       <BottomSheet
         focusForPin={focusForPin}
         createOrder={createOrder}

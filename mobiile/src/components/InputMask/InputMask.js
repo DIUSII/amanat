@@ -7,7 +7,7 @@ import styles from './InputMaskStyles';
 
 const InputMask = props => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
       <Shadow
         distance={1}
         startColor={'#DFDFE650'}
@@ -22,7 +22,7 @@ const InputMask = props => {
             style={styles.maskInput}
             placeholderTextColor={'#ABA9B9'}
             onChangeText={(masked, unmasked) => {
-              props.setValue(unmasked);
+              props.masked ? props.setValue(masked) : props.setValue(unmasked);
             }}
             mask={props.mask}
           />

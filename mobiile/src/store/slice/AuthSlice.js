@@ -35,7 +35,7 @@ export const setCode = createAsyncThunk(
   },
 );
 
-export const registerUserOrDriver = createAsyncThunk(
+export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async payload => {
     try {
@@ -45,6 +45,21 @@ export const registerUserOrDriver = createAsyncThunk(
         await AsyncStorage.setItem('token', String(data.token));
       }
       await AsyncStorage.setItem('id', String(data.id));
+      return data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+);
+
+export const registerDriver = createAsyncThunk(
+  'auth/registerDriver',
+  async (payload, {getState}) => {
+    const {auth} = getState();
+
+    try {
+      const {data} = await ax.patch(`/users/${auth.userId}/`, payload);
+
       return data;
     } catch (e) {
       console.error(e);
@@ -83,7 +98,7 @@ export const authSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(registerUserOrDriver.fulfilled, (state, action) => {
+    builder.addCase(registerUser.fulfilled, (state, action) => {
       if (action.payload) {
         state.userId = action.payload.id;
         state.authorization = true;

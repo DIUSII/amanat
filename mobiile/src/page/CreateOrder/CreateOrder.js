@@ -8,7 +8,11 @@ import styles from './CreateOrderStyles';
 import Button from '../../components/Button/Button';
 import Checkbox from '../../components/Checkbox/Checkbox';
 import {useAppDispatch} from '../../utils/hooks';
-import {createOrder} from '../../store/slice/OrdersSlice';
+import {
+  createOrder,
+  getOrder,
+  paymentCreate,
+} from '../../store/slice/OrdersSlice';
 import CalculatorBox from '../../components/СalculatorBox/СalculatorBox';
 import DateTimePickerInput from '../../components/DateTimePickerInput/DateTimePickerInput';
 import DropDownPickerInput from '../../components/DropDownPickerInput/DropDownPickerInput';
@@ -37,6 +41,7 @@ const CreateOrder = ({navigation}) => {
   const [isConsolidation, setIsConsolidation] = useState(false);
   const [minimumDateUnLoading, setMinimumDateUnLoading] = useState(new Date());
   const [volume, setVolume] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const onPress = () => {
     const payload = {
@@ -62,9 +67,13 @@ const CreateOrder = ({navigation}) => {
       weight: weigthCargo,
     };
 
-    const res = dispatch(createOrder(payload)).then(({payload}) => {
-      console.log(payload);
+    setLoading(true);
+
+    dispatch(createOrder(payload)).then(({payload}) => {
+      setLoading(false);
+
       if (payload) {
+        dispatch(getOrder());
         navigation.navigate('Main');
       }
     });
@@ -103,13 +112,14 @@ const CreateOrder = ({navigation}) => {
   const disabledButton =
     !!fromWhere.text &&
     !!toWhere.text &&
-    dateStartLoading &&
-    dateStartUnLoading &&
+    !!dateStartLoading.label &&
+    !!dateStartUnLoading.label &&
     typeCar &&
     weigthCargo &&
-    ((width && height && length) ||
-    volume);
-  console.log()
+    width &&
+    height &&
+    length &&
+    volume;
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -205,7 +215,7 @@ const CreateOrder = ({navigation}) => {
             isSelected={isConsolidation}
             setSelection={setIsConsolidation}
           />
-          <Button disabled={!disabledButton} onPress={onPress}>
+          <Button loading={loading} disabled={!disabledButton} onPress={onPress}>
             Заказать
           </Button>
           <Text style={styles.tip}>

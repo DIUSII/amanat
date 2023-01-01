@@ -21,8 +21,8 @@ const TypeDriver = () => {
     },
   ]);
 
-  const handleSelected = index => {
-    const type = typeDriver.find(type => type.id === index);
+  const handleSelected = (id, index) => {
+    const type = typeDriver.find(type => type.id === id);
     const changeTypeDriver = typeDriver.map(type => {
       return {...type, selected: false};
     });
@@ -48,7 +48,7 @@ const TypeDriver = () => {
               offset={[0, 3]}>
               <TouchableOpacity
                 style={styles.content}
-                onPress={() => handleSelected(index)}>
+                onPress={() => handleSelected(card.id, index)}>
                 <Text style={styles.label}>{card.label}</Text>
                 <View style={styles.row}>
                   <RadioButton selected={card.selected} />

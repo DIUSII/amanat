@@ -50,6 +50,31 @@ export const getCargoCategories = createAsyncThunk(
   },
 );
 
+export const addCard = createAsyncThunk(
+  'main/addCard',
+  async (payload, {dispatch}) => {
+    try {
+      const {data} = await ax.post('/bank_cards/', payload);
+
+      dispatch(getCard());
+
+      return data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+);
+
+export const getCard = createAsyncThunk('main/addCard', async () => {
+  try {
+    const {data} = await ax.get('/bank_cards/');
+    console.log(data);
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+});
+
 export const logOut = createAsyncThunk(
   'main/logOut',
   async (payload, {dispatch}) => {

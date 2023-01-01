@@ -9,7 +9,7 @@ import CameraModal from '../../components/Camera/Camera';
 import styles from './RegisterDriverStyles';
 import CalculatorBox from '../../components/СalculatorBox/СalculatorBox';
 import {useAppDispatch, useAppSelector} from '../../utils/hooks';
-import {registerUserOrDriver} from '../../store/slice/AuthSlice';
+import {registerDriver, registerUserOrDriver} from '../../store/slice/AuthSlice';
 import {getCargoCategories, getUser} from '../../store/slice/MainSlice';
 import InputMask from '../../components/InputMask/InputMask';
 import DropDownPickerInput from '../../components/DropDownPickerInput/DropDownPickerInput';
@@ -45,8 +45,8 @@ const RegisterDriver = ({route, navigation}) => {
   const [boxVolume, setBoxVolume] = useState('');
 
   const userName = user && user.properties && user.properties.phone;
-  const year = new Date().getFullYear();
-  const maximumDate = new Date(year - 18);
+  const date = new Date();
+  const maximumDate = date.setFullYear(date.getFullYear() - 18);
 
   const onPress = async () => {
     const payload = {
@@ -73,7 +73,7 @@ const RegisterDriver = ({route, navigation}) => {
       },
     };
 
-    const data = await dispatch(registerUserOrDriver(payload));
+    const data = await dispatch(registerDriver(payload));
 
     if (data) {
       await dispatch(getUser());
@@ -102,11 +102,11 @@ const RegisterDriver = ({route, navigation}) => {
     !cargoCategories.length ||
     !bodyLength ||
     !bodyWidth ||
-    !driverLicenseFront ||
-    !driverLicenseBack ||
-    !passport ||
-    !techPassport ||
-    !selfie ||
+    // !driverLicenseFront ||
+    // !driverLicenseBack ||
+    // !passport ||
+    // !techPassport ||
+    // !selfie ||
     !bodyHeight;
 
   useEffect(() => {
@@ -133,8 +133,9 @@ const RegisterDriver = ({route, navigation}) => {
         <Title style={{marginBottom: 36}}>Анкета</Title>
         <Text style={styles.subTitle}>Личная информация</Text>
         <DateTimePickerInput
-          value={bitchDay.label}
+          value={bitchDay}
           setValue={setDate}
+          minimumDate={new Date(1900, 0, 0, 0)}
           maximumDate={maximumDate}
           placeholder={'Дата рождения'}
         />

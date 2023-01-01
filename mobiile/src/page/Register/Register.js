@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {BackHandler, ScrollView, View} from 'react-native';
 
 import {useAppDispatch} from '../../utils/hooks';
-import {registerUserOrDriver} from '../../store/slice/AuthSlice';
+import {registerUser} from '../../store/slice/AuthSlice';
 
 import Title from '../../components/Title/Title';
 import Toggle from './components/Toggle/Toggle';
@@ -44,7 +44,7 @@ const RegisterStyle = ({route, navigation}) => {
       payload.photo = `data:${image.type};base64,${image.base64}`;
     }
 
-    const data = await dispatch(registerUserOrDriver(payload));
+    const data = await dispatch(registerUser(payload));
 
     if (data.payload) {
       if (role === 'driver') {
