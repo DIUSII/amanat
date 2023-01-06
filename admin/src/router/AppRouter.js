@@ -17,8 +17,8 @@ const AppRouter = () => {
     <Router>
       <Header />
       <Routes>
-        <Route path="/" element={<Auth />} />
-        <Route path="/list-driver" element={<ListDriver />} />
+        {/*<Route path="/" element={<Auth />} />*/}
+        <Route exact path="/list-driver" element={<ListDriver />} />
         <Route path="/list-user" element={<ListUser />} />
         <Route path="/list-order" element={<ListOrder />} />
         <Route path="/list-review" element={<ListReview />} />

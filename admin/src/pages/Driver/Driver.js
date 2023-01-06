@@ -45,7 +45,7 @@ import {
   TypeCar,
   VolumeCargo,
   WeightCargo,
-  WeigthCargo, СauseLabel,
+  СauseLabel,
 } from './DriverStyles';
 
 const Driver = () => {

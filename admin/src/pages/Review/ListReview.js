@@ -1,17 +1,9 @@
 import React from 'react';
 
-import DatePickerInput from '../../components/DateTimePickerInput/DatePickerInput';
-
-import check from './assets/images/check.svg';
-import arrow from './assets/images/arrow.svg';
-
 import {
-  Arrow,
-  GroupArrow,
   Input,
   LabelTHead,
-  Row,
-  Text, BackgroundStylesHeaders, FixedContainer, BackgroundStyles, RowHeader,
+  Text, BackgroundStylesHeaders, FixedContainer, BackgroundStyles,
 } from './ListReviewStyles';
 
 const ListReview = () => {

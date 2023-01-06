@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import logo from './assets/images/logo.png';
 
 import {Button, Container, ContainerImage, Image, Item, List, NavbarLink} from './HeaderStyles';
-import {Link, NavLink} from 'react-router-dom';
 
 const Header = () => {
   const [list, setList] = useState([
