@@ -3,7 +3,7 @@ import {Route, BrowserRouter as Router, Routes} from 'react-router-dom';
 
 import Header from '../components/Header/Header';
 
-import Auth from '../pages/Auth/Auth';
+// import Auth from '../pages/Auth/Auth';
 import ListDriver from '../pages/List/ListDriver';
 import ListUser from '../pages/ListUser/ListUser';
 import ListOrder from '../pages/ListOrder/ListOrder';
